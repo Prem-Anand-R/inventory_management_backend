@@ -1,5 +1,7 @@
 import express from 'express';
-import pg from 'pg';
+import pkg from 'pg';
+
+
 import cors from 'cors';
 
 const app = express();
@@ -9,15 +11,25 @@ app.use(cors());
 
 const port = 3008;
 
-const db = new pg.Client({
-    host: 'localhost',
-    user: 'postgres',
-    database: 'Inventory',
-    password: 'postgresql',
-    port: '5432'
+const { Client } = pkg;
+
+
+const db = new Client({
+  host: 'ep-broad-sun-a8traj4d-pooler.eastus2.azure.neon.tech', 
+  user: 'inventory_management_owner',
+  password: 'npg_oNfhxkuj48mZ',
+  database: 'inventory_management',
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+    require: true, 
+  }
 });
 
-db.connect();
+
+db.connect()
+  .then(() => console.log("Connected to Neon DB"))
+  .catch(err => console.error("Connection error", err));
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
