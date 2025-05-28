@@ -1,0 +1,107 @@
+
+ 		inward details
+-----------------------------------------------------------------
+-- Table: public.inward_details
+
+-- DROP TABLE IF EXISTS public.inward_details;
+
+CREATE TABLE IF NOT EXISTS public.inward_details
+(
+    id integer NOT NULL DEFAULT nextval('inward_details_id_seq'::regclass),
+    product_id integer,
+    date character varying(20) COLLATE pg_catalog."default",
+    product_name character varying(40) COLLATE pg_catalog."default",
+    price integer,
+    num_product integer,
+    CONSTRAINT inward_details_pkey PRIMARY KEY (id),
+    CONSTRAINT inward_details_product_id_fkey FOREIGN KEY (product_id)
+        REFERENCES public.product_list (product_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.inward_details
+    OWNER to postgres;
+
+------------------------------------------------------------------------------------------------------------
+
+		outward details
+---------------------------------------------------------------------------------
+
+-- Table: public.outward_details
+
+-- DROP TABLE IF EXISTS public.outward_details;
+
+CREATE TABLE IF NOT EXISTS public.outward_details
+(
+    id integer NOT NULL DEFAULT nextval('outward_details_id_seq'::regclass),
+    product_id integer NOT NULL,
+    date character varying(20) COLLATE pg_catalog."default",
+    product_name character varying(40) COLLATE pg_catalog."default",
+    price integer,
+    num_product integer,
+    CONSTRAINT outward_details_pkey PRIMARY KEY (id),
+    CONSTRAINT outward_details_product_id_fkey FOREIGN KEY (product_id)
+        REFERENCES public.product_list (product_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.outward_details
+    OWNER to postgres;
+
+---------------------------------------------------------------------------------------------
+
+			productlist
+-----------------------------------------------------------------------------------------
+
+-- Table: public.product_list
+
+-- DROP TABLE IF EXISTS public.product_list;
+
+CREATE TABLE IF NOT EXISTS public.product_list
+(
+    product_id integer NOT NULL DEFAULT nextval('product_list_product_id_seq'::regclass),
+    product_name character varying(40) COLLATE pg_catalog."default",
+    product_price integer,
+    stocks integer NOT NULL,
+    CONSTRAINT product_list_pkey PRIMARY KEY (product_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.product_list
+    OWNER to postgres;
+
+-----------------------------------------------------------------------------------------
+
+			login
+--------------------------------------------------------------------------------------
+
+-- Table: public.login_page
+
+-- DROP TABLE IF EXISTS public.login_page;
+
+CREATE TABLE IF NOT EXISTS public.login_page
+(
+    login_id integer NOT NULL DEFAULT nextval('login_page_login_id_seq'::regclass),
+    user_name character varying(45) COLLATE pg_catalog."default",
+    email_id character varying(45) COLLATE pg_catalog."default",
+    password character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT login_page_pkey PRIMARY KEY (login_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.login_page
+    OWNER to postgres;
+---------------------------------------------------------------------------------------------------
+
+Alter table inward and outward 
+
+ALTER TABLE public.inward_details
+ADD COLUMN date date;
