@@ -1,35 +1,28 @@
 import express from 'express';
 import pkg from 'pg';
-
-
 import cors from 'cors';
 
-const app = express();
-app.use(express.json()); 
+const { Pool } = pkg;
 
+const app = express();
+app.use(express.json());
 app.use(cors());
 
 const port = 3008;
 
-const { Client } = pkg;
-
-
-const db = new Client({
-  host: 'ep-broad-sun-a8traj4d-pooler.eastus2.azure.neon.tech', 
-  user: 'inventory_management_owner',
-  password: 'npg_oNfhxkuj48mZ',
-  database: 'inventory_management',
-  port: 5432,
-  ssl: {
-    rejectUnauthorized: false,
-    require: true, 
-  }
+const db = new Pool({
+  connectionString: 'postgres://inventory_management_owner:npg_oNfhxkuj48mZ@ep-broad-sun-a8traj4d-pooler.eastus2.azure.neon.tech/inventory_management?sslmode=require'
 });
 
-
 db.connect()
-  .then(() => console.log("Connected to Neon DB"))
-  .catch(err => console.error("Connection error", err));
+  .then(client => {
+    console.log("✅ Connected to Neon DB (via pooler)");
+    client.release();
+  })
+  .catch(err => {
+    console.error("❌ Connection error", err.stack);
+  });
+
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
